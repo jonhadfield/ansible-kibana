@@ -1,0 +1,5 @@
+---
+kibana_online_install: true
+kibana_installer_path: /var/installers
+kibana_version: 3.0.1
+kibana_base_install_dir: /apps

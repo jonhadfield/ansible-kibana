@@ -8,9 +8,9 @@ Requirements
 
 Tested on Anbsible 1.6
 
-Basic auth has been setup for kibana access. 
-read  - user: cheese   password: toast
-write - user: marmite  password: cashews
+    Basic auth has been setup for kibana access. 
+    read  - user: cheese   password: toast
+    write - user: marmite  password: cashews
 
 Role Variables
 --------------

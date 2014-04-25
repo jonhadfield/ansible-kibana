@@ -2,6 +2,7 @@
 # Online install
 - name: online install | download kibana
   get_url: url=https://download.elasticsearch.org/kibana/kibana/kibana-{{ kibana_version }}.tar.gz dest=/var/tmp/kibana-{{ kibana_version }}.tar.gz
+  when: kibana_online_install
 - name: online install | extract kibana installation
   unarchive: src=/var/tmp/kibana-{{ kibana_version }}.tar.gz copy=no dest={{ kibana_base_install_dir }}/ mode=0700 creates={{ kibana_base_install_dir }}/kibana-{{ kibana_version }}/index.html
   notify:

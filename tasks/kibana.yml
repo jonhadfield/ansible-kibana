@@ -30,8 +30,6 @@
   with_items:
     - kibana.htpasswd
     - kibana-write.htpasswd
-- name: set permissions for nginx
-  file: path={{ nginx_base_install_dir }}/nginx/conf/ recurse=yes mode=0750 owner=nginx group=nginx 
 - name: install kibana virtual server certificates
   copy: src={{ item }} dest={{ nginx_base_install_dir }}/nginx/conf/ssl/{{ item }} owner=nginx group=nginx
   with_items:

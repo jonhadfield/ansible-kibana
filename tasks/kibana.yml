@@ -11,7 +11,7 @@
 
 # Offline Install
 - name: offline install | copy and extract kibana installation
-  unarchive: src={{ kibana_installer_path }}/kibana-{{ kibana_version }}.tar.gz dest={{ kibana_base_install_dir }}/ mode=0700 creates={{ kibana_base_install_dir }}/kibana-{{ kibana_version }}/index.html
+  unarchive: src={{ kibana_installer_path }} dest={{ kibana_base_install_dir }}/ mode=0700 creates={{ kibana_base_install_dir }}/kibana-{{ kibana_version }}/index.html
   notify:
     - restart nginx
   when: not kibana_online_install

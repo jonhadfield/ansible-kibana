@@ -16,6 +16,10 @@
     - restart nginx
   when: not kibana_online_install
 
+# Override elasticsearch url
+- name: set path to elasticsearch
+  lineinfile: "dest={{ kibana_base_install_dir }}/kibana-{{ kibana_version }}/config.js regexp='^    elasticsearch' line='    elasticsearch: \"{{ kibana_elasticsearch_url }}\",'"
+
 # Set permissions for kibana dir
 - name: grant directory permissions to nginx user for kibana installation directory
   file: path={{ kibana_base_install_dir }}/kibana-{{ kibana_version }} owner=nginx group=nginx recurse=true

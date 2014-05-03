@@ -18,6 +18,8 @@ Role Variables
     kibana_installer_path: /var/installers    # Where to find the installer for an offline installation
     kibana_version: 3.0.1                     # The version of kibana to install
     kibana_base_install_dir: /apps            # Where to install kibana 
+    kibana_elasticsearch_url:                 # The url for elasticsearch (accesible to users of Kibana)
+
 
 
 Dependencies

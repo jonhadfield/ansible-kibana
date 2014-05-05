@@ -8,8 +8,9 @@
   }
 
   upstream es_cluster {
-    server example.com:9200 weight=1 fail_timeout=1;
-    server example.com:9200 weight=1 fail_timeout=1;
+{% for member in kibana_elasticsearch_cluster_members %}    
+    server {{ member }} {% if loop.first %} fail_timeout=1s max_fails=1; {% else %} backup; {% endif %} 
+{% endfor %}
   }
 
   server {
@@ -31,41 +32,41 @@
     rewrite ^/es/(.*)$  /$1 break;
 
     location ~ ^/_aliases$ {
-      proxy_pass http://127.0.0.1:9200;
+      proxy_pass http://es_cluster;
       proxy_read_timeout 90;
     }
     location ~ ^/.*/_aliases$ {
-      proxy_pass http://127.0.0.1:9200;
+      proxy_pass http://es_cluster;
       proxy_read_timeout 90;
     }
     location ~ ^/_nodes$ {
-      proxy_pass http://127.0.0.1:9200;
+      proxy_pass http://es_cluster;
       proxy_read_timeout 90;
     }
     location ~ ^/.*/_search$ {
-      proxy_pass http://127.0.0.1:9200;
+      proxy_pass http://es_cluster;
       proxy_read_timeout 90;
     }
     location ~ ^/.*/_mapping$ {
-      proxy_pass http://127.0.0.1:9200;
+      proxy_pass http://es_cluster;
       proxy_read_timeout 90;
     }
  
     # Password protected end points
     location ~ ^/kibana-int/dashboard/.*$ {
-      proxy_pass http://127.0.0.1:9200;
+      proxy_pass http://es_cluster;
       proxy_read_timeout 90;
       limit_except GET {
-        proxy_pass http://127.0.0.1:9200;
+        proxy_pass http://es_cluster;
         auth_basic "Restricted";
         auth_basic_user_file {{ nginx_base_install_dir }}/nginx/conf/servers/kibana-write.htpasswd;
       }
     }
     location ~ ^/kibana-int/temp.*$ {
-      proxy_pass http://127.0.0.1:9200;
+      proxy_pass http://es_cluster;
       proxy_read_timeout 90;
       limit_except GET {
-        proxy_pass http://127.0.0.1:9200;
+        proxy_pass http://es_cluster;
         auth_basic "Restricted";
         auth_basic_user_file {{ nginx_base_install_dir}}/nginx/conf/servers/kibana-write.htpasswd;
       }

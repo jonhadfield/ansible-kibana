@@ -19,13 +19,15 @@ Role Variables
     kibana_version: 3.0.1                     # The version of kibana to install
     kibana_base_install_dir: /apps            # Where to install kibana 
     kibana_elasticsearch_url:                 # The url for elasticsearch (accesible to users of Kibana)
-
-
+    kibana_elasticsearch_cluster_members:     # List of upstream elasticsearch servers (first is primary, the rest are backups)
+      - es1:9200
+      - es2:9200
+      - es3:9200
 
 Dependencies
 ------------
 
-nginx
+nginx # Calls 'restart nginx' handler when configuration is created
 
 Example Playbook
 -------------------------

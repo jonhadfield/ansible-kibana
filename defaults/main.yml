@@ -4,3 +4,7 @@ kibana_installer_path: /var/installers
 kibana_version: 3.0.1
 kibana_base_install_dir: /apps
 kibana_elasticsearch_url: https://example.com/es
+kibana_elasticsearch_cluster_members:
+    - es1:9200
+    - es2:9200
+    - es3:9200

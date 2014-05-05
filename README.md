@@ -23,6 +23,9 @@ Role Variables
       - es1:9200
       - es2:9200
       - es3:9200
+    kibana_healthcheck_url: /check            # Expected healthcheck request
+    kibana_healthcheck_file: /check.html      # File to return as response to healthcheck
+    kibana_healthcheck_content: OK            # Content of http response
 
 Dependencies
 ------------

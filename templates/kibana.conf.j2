@@ -9,7 +9,7 @@
 
   upstream es_cluster {
 {% for member in kibana_elasticsearch_cluster_members %}    
-    server {{ member }} {% if loop.first %} fail_timeout=1s max_fails=1; {% else %} backup; {% endif %} 
+    server {{ member }} {% if loop.first %} weight={{ loop.index }} fail_timeout=1s max_fails=1; {% else %} weight={{ loop.index }} backup; {% endif %} 
 {% endfor %}
   }
 
@@ -25,6 +25,15 @@
     ssl_protocols  SSLv2 SSLv3 TLSv1;
     ssl_ciphers  ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
     ssl_prefer_server_ciphers   on;
+
+    {% if kibana_healthcheck_url is defined %}
+    location ~ ^{{ kibana_healthcheck_url }}$ {
+      auth_basic off;
+      root   {{ nginx_base_install_dir }}/nginx/html;
+      rewrite ^{{ kibana_healthcheck_url }}$ {{ kibana_healthcheck_file }} break;
+    }
+    {% endif %}
+
 
     auth_basic "Restricted";
     auth_basic_user_file {{ nginx_base_install_dir }}/nginx/conf/servers/kibana.htpasswd;

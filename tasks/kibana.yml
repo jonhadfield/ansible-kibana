@@ -37,3 +37,6 @@
     - example.com.key
   notify:
     - restart nginx
+- name: install kibana healthcheck file
+  template: src=healthcheck.html.j2 dest={{ nginx_base_install_dir }}/nginx/html/{{ kibana_healthcheck_file }} owner=nginx group=nginx
+  when: kibana_healthcheck_url is defined

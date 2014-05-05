@@ -5,15 +5,11 @@
   when: kibana_online_install
 - name: online install | extract kibana installation
   unarchive: src=/var/tmp/kibana-{{ kibana_version }}.tar.gz copy=no dest={{ kibana_base_install_dir }}/ mode=0700 creates={{ kibana_base_install_dir }}/kibana-{{ kibana_version }}/index.html
-  notify:
-    - restart nginx
   when: kibana_online_install
 
 # Offline Install
 - name: offline install | copy and extract kibana installation
   unarchive: src={{ kibana_installer_path }} dest={{ kibana_base_install_dir }}/ mode=0700 creates={{ kibana_base_install_dir }}/kibana-{{ kibana_version }}/index.html
-  notify:
-    - restart nginx
   when: not kibana_online_install
 
 # Override elasticsearch url

@@ -8,6 +8,6 @@ kibana_elasticsearch_cluster_members:
     - es1:9200
     - es2:9200
     - es3:9200
-kibana_healthcheck_url: /check
-kibana_healthcheck_file: /check.html
-kibana_healthcheck_content: OK
+kibana_healthcheck_url:
+kibana_healthcheck_file:
+kibana_healthcheck_content:

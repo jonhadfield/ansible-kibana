@@ -12,7 +12,7 @@
   unarchive: src={{ kibana_installer_path }} dest={{ kibana_base_install_dir }}/ mode=0700 creates={{ kibana_base_install_dir }}/kibana-{{ kibana_version }}/index.html
   when: not kibana_online_install
 
-# Override elasticsearch url
+# Override elasticsearch url in config.js
 - name: set path to elasticsearch
   lineinfile: "dest={{ kibana_base_install_dir }}/kibana-{{ kibana_version }}/config.js regexp='^    elasticsearch' line='    elasticsearch: \"{{ kibana_elasticsearch_url }}\",'"
 
@@ -25,11 +25,34 @@
   template: src=kibana.conf.j2 dest={{ nginx_base_install_dir }}/nginx/conf/servers/kibana.conf owner=nginx group=nginx
   notify:
   - restart nginx
-- name: install kibana authentication for nginx
-  copy: src={{ item }} dest={{ nginx_base_install_dir }}/nginx/conf/servers/{{ item }} owner=nginx group=nginx
+
+# _Configure kibana access_
+
+# Remove existing users to ensure only current users remain 
+# Set kibana_purge_htpasswd=true in vars or at runtime with: --extra-vars="kibana_purge_htpasswd=true"
+- name: purge users
+  file: path={{ nginx_base_install_dir }}/nginx/conf/servers/{{ item  }} state=absent
   with_items:
     - kibana.htpasswd
     - kibana-write.htpasswd
+  when: kibana_purge_htpasswd
+
+# Implement kibana access using htpasswd module (Requires: python-passlib on managed nodes)
+- name: configure kibana read users using htpasswd module
+  htpasswd: path={{ nginx_base_install_dir }}/nginx/conf/servers/kibana.htpasswd name={{ item.value.username }} password={{ item.value.password }} owner=nginx group=nginx mode=0640
+  with_dict: kibana_read_users
+  when: kibana_read_users
+- name: configure kibana write users using htpasswd module
+  htpasswd: path={{ nginx_base_install_dir }}/nginx/conf/servers/kibana-write.htpasswd  name={{ item.value.username }} password={{ item.value.password }} owner=nginx group=nginx mode=0640
+  with_dict: kibana_write_users
+  when: kibana_write_users
+
+# Implement kibana access using pre-built htpasswd files
+- name: copy pre-built kibana read and write htpasswd files
+  copy: src={{ kibana_htpasswd_files_path }}/{{ item }} dest={{ nginx_base_install_dir }}/nginx/conf/servers/{{ item }} owner=nginx group=nginx mode=0640
+  when: kibana_htpasswd_files_path|default(None) != None
+
+# Install ssl certificates to secure kibana traffic
 - name: install kibana virtual server certificates
   copy: src={{ item }} dest={{ nginx_base_install_dir }}/nginx/conf/ssl/{{ item }} owner=nginx group=nginx
   with_items:
@@ -37,6 +60,8 @@
     - example.com.key
   notify:
     - restart nginx
+
+# Install healthcheck response file for monitoring
 - name: install kibana healthcheck file
   template: src=healthcheck.html.j2 dest={{ nginx_base_install_dir }}/nginx/html/{{ kibana_healthcheck_file }} owner=nginx group=nginx
   when: kibana_healthcheck_url is defined

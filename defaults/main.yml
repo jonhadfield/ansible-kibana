@@ -1,6 +1,6 @@
 ---
 kibana_online_install: true
-kibana_installer_path: /var/installers
+kibana_installer_path: /var/installers/kibana-3.0.1.tar.gz
 kibana_version: 3.0.1
 kibana_base_install_dir: /apps
 kibana_elasticsearch_url: https://example.com/es
@@ -11,3 +11,13 @@ kibana_elasticsearch_cluster_members:
 kibana_healthcheck_url:
 kibana_healthcheck_file:
 kibana_healthcheck_content:
+kibana_htpasswd_files_path:
+kibana_purge_htpasswd: false
+kibana_read_users:
+  guest:
+    username: guest
+    password: password
+kibana_write_users:
+  first_last:
+    username: lastf
+    password: secret

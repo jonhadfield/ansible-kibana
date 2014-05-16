@@ -24,11 +24,11 @@ Role Variables
     kibana_healthcheck_content: OK                     # Content of http response
     kibana_htpasswd_files_path:                        # Where to find kibana.htpasswd and kibana-write.htpasswd
     kibana_purge_htpasswd: false                       # Delete htpasswd files 
-    kibana_read_users:                                 # List of user hashes with read access
+    kibana_read_users:                                 # List of user hashes with read access (Requires python-passlib)
       guest:
         username: guest
         password: password
-    kibana_write_users:                                # List of user hashes with write access
+    kibana_write_users:                                # List of user hashes with write access (Requires python-passlib)
       first_last:
         username: lastf
         password: secret

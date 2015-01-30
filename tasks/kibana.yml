@@ -36,6 +36,7 @@
   with_items:
     - kibana.htpasswd
     - kibana-write.htpasswd
+    - admins.htpasswd
   when: kibana_purge_htpasswd
 
 # Implement kibana access using htpasswd module (Requires: python-passlib on managed nodes)
@@ -47,6 +48,10 @@
   htpasswd: path={{ nginx_base_install_dir }}/nginx/conf/servers/kibana-write.htpasswd  name={{ item.value.username }} password={{ item.value.password }} owner=nginx group=nginx mode=0640
   with_dict: kibana_write_users
   when: kibana_write_users
+- name: configure admin users using htpasswd module
+  htpasswd: path={{ nginx_base_install_dir }}/nginx/conf/servers/admins.htpasswd  name={{ item.value.username }} password={{ item.value.password }} owner=nginx group=nginx mode=0640
+  with_dict: kibana_admin_users
+  when: kibana_admin_users
 
 # Implement kibana access using pre-built htpasswd files
 - name: copy pre-built kibana read and write htpasswd files

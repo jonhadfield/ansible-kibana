@@ -32,6 +32,10 @@ Role Variables
       first_last:
         username: lastf
         password: secret
+    kibana_admin_users:
+      first_last:
+        username: admin_username
+        password: more_secret
 
 Dependencies
 ------------

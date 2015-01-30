@@ -80,6 +80,13 @@
         auth_basic_user_file {{ nginx_base_install_dir}}/nginx/conf/servers/kibana-write.htpasswd;
       }
     }
+    # Password protected admin access
+    location ~ ^/adminaccess/(.*) {
+      proxy_read_timeout 90;
+      proxy_pass http://es_cluster/$1;
+      auth_basic "Restricted";
+      auth_basic_user_file {{ nginx_base_install_dir}}/nginx/conf/servers/admins.htpasswd;
+    }
     location / {
         root   {{ kibana_base_install_dir }}/kibana-{{ kibana_version }};
         index  index.html;
